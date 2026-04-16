@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marie Curie — The Glowing Scientist! ⚗️</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --teal:  #0d9488;
+  --teal2: #5eead4;
+  --blue:  #3b82f6;
+  --gold:  #F59E0B;
+  --glow:  #a7f3d0;
+}
+
+body {
+  font-family:'Nunito', sans-serif;
+  background:#0f172a;
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh; overflow-x:hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,0.7) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,0.4) 1px,transparent 1px);
+  background-size:60px 60px,37px 37px;
+  background-position:0 0,18px 18px;
+  opacity:0.15; pointer-events:none; z-index:0;
+}
+
+/* ── HEADER ── */
+.header {
+  position:relative; z-index:1; width:100%;
+  background:linear-gradient(135deg,#134e4a 0%,#1e3a5f 50%,#312e81 100%);
+  padding:20px 20px 14px; text-align:center;
+  border-bottom:3px solid var(--teal2);
+  box-shadow:0 4px 30px rgba(13,148,136,0.3);
+}
+.header h1 {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.5rem,5vw,2.5rem);
+  color:var(--teal2);
+  text-shadow:0 0 20px rgba(94,234,212,0.5);
+}
+.header p { color:#94a3b8; font-size:0.95rem; margin-top:4px; font-weight:700; }
+
+/* ── SCENE CONTAINER ── */
+.scene-container {
+  position:relative; z-index:1;
+  width:min(700px,95vw);
+  border-radius:24px; overflow:hidden;
+  box-shadow:0 10px 60px rgba(0,0,0,0.7);
+  border:3px solid #1e3a5f;
+  margin:20px auto 30px;
+}
+
+/* ── SCENE ── */
+.scene { position:relative; width:100%; height:340px; overflow:hidden; }
+
+.bg { position:absolute; inset:0; transition:background 1s; }
+.bg-warsaw  { background:linear-gradient(180deg,#1a2744 0%,#2a3a5e 60%,#b8c8e0 100%); }
+.bg-paris   { background:linear-gradient(180deg,#1f1035 0%,#2d1b69 60%,#4a3580 100%); }
+.bg-lab     { background:linear-gradient(180deg,#0d1f1a 0%,#0d2d25 60%,#1a3a30 100%); }
+.bg-glow    { background:linear-gradient(180deg,#0a1a0f 0%,#0a2d18 50%,#0f3d20 100%); }
+.bg-triumph { background:linear-gradient(180deg,#1a1a3e 0%,#2d2060 60%,#1e3a5f 100%); }
+
+.ground { position:absolute; bottom:0; left:0; right:0; height:72px; }
+.g-snow  { background:linear-gradient(180deg,#c8d8f0,#dce8f8); border-top:3px solid #eaf0ff; }
+.g-paris { background:linear-gradient(180deg,#2d1f5e,#1a1035); border-top:3px solid #4a3580; }
+.g-lab   { background:linear-gradient(180deg,#1a2d28,#0d1f1a); border-top:3px solid #234d40; }
+
+.snowflake { position:absolute; color:white; animation:snowfall linear infinite; opacity:0.7; }
+@keyframes snowfall { 0%{transform:translateY(-10px) rotate(0deg);opacity:0.8;} 100%{transform:translateY(360px) rotate(360deg);opacity:0;} }
+
+.star-dot { position:absolute; background:white; border-radius:50%; animation:twinkle 2s ease-in-out infinite; }
+@keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
+
+.eiffel { position:absolute; bottom:72px; right:28px; opacity:0; transition:opacity 0.8s; }
+.eiffel.show { opacity:1; }
+
+.glow-orb { position:absolute; border-radius:50%; filter:blur(30px); animation:glowPulse 2s ease-in-out infinite; display:none; }
+@keyframes glowPulse { 0%,100%{opacity:0.4;transform:scale(1);} 50%{opacity:0.8;transform:scale(1.15);} }
+
+.notebook { position:absolute; bottom:112px; left:50%; transform:translateX(-50%); opacity:0; transition:opacity 0.7s; }
+.notebook.show { opacity:1; }
+
+.medal { position:absolute; font-size:2.8rem; top:28px; opacity:0; }
+.medal.pop { animation:medalDrop 0.7s cubic-bezier(.36,.07,.19,.97) both; opacity:1; }
+@keyframes medalDrop { 0%{transform:translateY(-60px) rotate(-20deg);opacity:0;} 60%{transform:translateY(10px) rotate(5deg);opacity:1;} 100%{transform:translateY(0) rotate(0deg);opacity:1;} }
+
+.rad-flash { position:absolute; inset:0; pointer-events:none; }
+.rad-flash.pop { animation:radFlash 1s ease-out forwards; }
+@keyframes radFlash { 0%{background:rgba(167,243,208,0.35);} 100%{background:rgba(167,243,208,0);} }
+
+.particle { position:absolute; border-radius:50%; pointer-events:none; animation:particleFloat linear infinite; }
+@keyframes particleFloat { 0%{transform:translate(0,0) scale(1);opacity:0.8;} 100%{transform:translate(var(--px),var(--py)) scale(0);opacity:0;} }
+
+.pop-text {
+  position:absolute; top:75px; left:50%;
+  transform:translateX(-50%) scale(0);
+  font-family:'Fredoka One',cursive; font-size:1.9rem;
+  text-shadow:0 0 20px currentColor; pointer-events:none; white-space:nowrap;
+}
+.pop-text.show { animation:boomPop 1.2s ease-out forwards; }
+@keyframes boomPop { 0%{transform:translateX(-50%) scale(0);opacity:1;} 30%{transform:translateX(-50%) scale(1.2);} 70%{transform:translateX(-50%) scale(1);opacity:1;} 100%{transform:translateX(-50%) scale(0.8);opacity:0;} }
+
+.marie { position:absolute; bottom:72px; transition:left 0.8s ease; filter:drop-shadow(2px 4px 8px rgba(0,0,0,0.5)); }
+
+/* TEXT PANEL */
+.text-panel { background:#0f172a; padding:0; min-height:158px; }
+.slide-text { display:none; padding:20px 24px 14px; animation:fadeUp 0.5s ease; }
+.slide-text.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.slide-text h2 { font-family:'Fredoka One',cursive; font-size:1.25rem; color:var(--teal2); margin-bottom:7px; }
+.slide-text p  { color:#cbd5e1; font-size:0.98rem; line-height:1.6; font-weight:600; }
+.fun-fact {
+  display:inline-block;
+  background:linear-gradient(135deg,#134e4a,#1e3a5f);
+  border:2px solid var(--teal2); border-radius:12px;
+  padding:7px 13px; margin-top:10px;
+  font-size:0.86rem; color:var(--teal2); font-weight:700;
+}
+.fun-fact::before { content:"⭐ "; }
+
+/* AUDIO BAR */
+.audio-bar {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 18px; background:#0a0f1e;
+  border-top:2px solid #1e3a5f; flex-wrap:wrap;
+}
+.audio-play-btn {
+  width:40px; height:40px; border-radius:50%; border:none;
+  background:linear-gradient(135deg,var(--teal),var(--blue));
+  color:white; font-size:1.1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s; box-shadow:0 3px 12px rgba(13,148,136,0.4); flex-shrink:0;
+}
+.audio-play-btn:hover { transform:scale(1.1); }
+.audio-stop-btn {
+  width:32px; height:32px; border-radius:50%;
+  border:2px solid #1e3a5f; background:#1e293b;
+  color:var(--teal2); font-size:0.85rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s; flex-shrink:0;
+}
+.audio-stop-btn:hover { border-color:var(--teal2); }
+.audio-progress-wrap { flex:1; min-width:80px; height:6px; background:#1e3a5f; border-radius:3px; overflow:hidden; }
+.audio-progress-bar { height:100%; width:0%; background:linear-gradient(90deg,var(--teal),var(--teal2)); border-radius:3px; transition:width 0.3s linear; }
+.audio-status { font-size:0.78rem; color:#475569; font-weight:700; white-space:nowrap; }
+.audio-status.speaking { color:var(--teal2); }
+.autoread-toggle { display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.78rem; color:#475569; font-weight:700; user-select:none; white-space:nowrap; }
+.autoread-toggle input { display:none; }
+.toggle-pill { width:34px; height:18px; background:#1e3a5f; border-radius:9px; position:relative; transition:background 0.3s; border:2px solid #2a4a6e; }
+.toggle-pill::after { content:''; position:absolute; width:12px; height:12px; background:#475569; border-radius:50%; top:1px; left:1px; transition:all 0.3s; }
+.autoread-toggle input:checked + .toggle-pill { background:#134e4a; border-color:var(--teal); }
+.autoread-toggle input:checked + .toggle-pill::after { left:17px; background:var(--teal2); }
+
+/* CONTROLS */
+.controls { display:flex; align-items:center; justify-content:space-between; padding:13px 20px; background:#0a0f1e; border-top:2px solid #1e3a5f; }
+.ctrl-btn { font-family:'Fredoka One',cursive; font-size:1rem; padding:10px 22px; border:none; border-radius:50px; cursor:pointer; transition:all 0.25s; }
+.ctrl-btn.prev { background:#1e293b; color:#64748b; }
+.ctrl-btn.prev:hover:not(:disabled) { background:#1e3a5f; }
+.ctrl-btn.next { background:linear-gradient(135deg,var(--teal),var(--blue)); color:white; box-shadow:0 4px 15px rgba(13,148,136,0.35); }
+.ctrl-btn.next:hover:not(:disabled) { transform:scale(1.05); }
+.ctrl-btn:disabled { opacity:0.3; cursor:default; transform:none !important; }
+.progress-dots { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.dot { width:10px; height:10px; border-radius:50%; background:#1e3a5f; transition:all 0.3s; cursor:pointer; }
+.dot.active { background:var(--teal2); box-shadow:0 0 8px rgba(94,234,212,0.6); transform:scale(1.2); }
+.dot.done   { background:var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚗️ Marie Curie — The Glowing Scientist!</h1>
+  <p>A true story of the most amazing woman in science 🌟</p>
+</div>
+
+<div class="scene-container">
+
+  <div class="scene" id="sceneCanvas">
+    <div class="bg bg-warsaw" id="bg"></div>
+    <div id="starField"></div>
+    <div id="snowField"></div>
+
+    <div class="glow-orb" id="glowOrb1" style="width:150px;height:150px;background:#a7f3d0;left:28%;top:18%;"></div>
+    <div class="glow-orb" id="glowOrb2" style="width:100px;height:100px;background:#6ee7b7;left:54%;top:28%;animation-delay:1s;"></div>
+
+    <div class="notebook" id="notebook">
+      <svg width="82" height="72" viewBox="0 0 82 72">
+        <rect x="10" y="4" width="62" height="58" rx="5" fill="#1a3d30" stroke="#34d399" stroke-width="2"/>
+        <rect x="10" y="4" width="11" height="58" rx="3" fill="#134e4a"/>
+        <line x1="27" y1="17" x2="64" y2="17" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+        <line x1="27" y1="27" x2="64" y2="27" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+        <line x1="27" y1="37" x2="64" y2="37" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+        <line x1="27" y1="47" x2="64" y2="47" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+        <ellipse cx="41" cy="34" rx="16" ry="12" fill="rgba(167,243,208,0.25)"/>
+        <text x="41" y="38" text-anchor="middle" font-size="11" fill="#a7f3d0" font-weight="bold" font-family="monospace">Ra  Po</text>
+      </svg>
+    </div>
+
+    <div class="eiffel" id="eiffel">
+      <svg width="68" height="138" viewBox="0 0 68 138">
+        <polygon points="34,0 9,138 59,138" fill="none" stroke="#4a3580" stroke-width="2"/>
+        <line x1="19" y1="48"  x2="49" y2="48"  stroke="#4a3580" stroke-width="2"/>
+        <line x1="14" y1="88"  x2="54" y2="88"  stroke="#4a3580" stroke-width="2"/>
+        <line x1="9"  y1="118" x2="59" y2="118" stroke="#4a3580" stroke-width="2"/>
+        <line x1="24" y1="20"  x2="44" y2="20"  stroke="#4a3580" stroke-width="1.5"/>
+        <circle cx="34" cy="4"  r="3" fill="#FBBF24" opacity="0.9"/>
+        <circle cx="19" cy="48" r="2" fill="#FBBF24" opacity="0.5"/>
+        <circle cx="49" cy="48" r="2" fill="#FBBF24" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <!-- Medal 1 — Physics -->
+    <div class="medal" id="medal1" style="left:55px;">
+      <svg width="58" height="80" viewBox="0 0 58 80">
+        <!-- ribbon -->
+        <rect x="22" y="0" width="14" height="28" rx="3" fill="#e63946"/>
+        <polygon points="22,14 29,22 36,14" fill="#c1121f"/>
+        <!-- circle -->
+        <circle cx="29" cy="54" r="24" fill="#F59E0B"/>
+        <circle cx="29" cy="54" r="20" fill="#FBBF24"/>
+        <circle cx="29" cy="54" r="16" fill="#F59E0B" opacity="0.6"/>
+        <!-- number -->
+        <text x="29" y="61" text-anchor="middle" font-size="20" font-family="Fredoka One, cursive" font-weight="900" fill="white">1</text>
+        <!-- shine -->
+        <ellipse cx="22" cy="46" rx="5" ry="3" fill="white" opacity="0.3" transform="rotate(-30,22,46)"/>
+      </svg>
+    </div>
+    <!-- Medal 2 — Chemistry -->
+    <div class="medal" id="medal2" style="left:155px;">
+      <svg width="58" height="80" viewBox="0 0 58 80">
+        <!-- ribbon -->
+        <rect x="22" y="0" width="14" height="28" rx="3" fill="#2d6a4f"/>
+        <polygon points="22,14 29,22 36,14" fill="#1b4332"/>
+        <!-- circle -->
+        <circle cx="29" cy="54" r="24" fill="#a7f3d0"/>
+        <circle cx="29" cy="54" r="20" fill="#6ee7b7"/>
+        <circle cx="29" cy="54" r="16" fill="#34d399" opacity="0.6"/>
+        <!-- number -->
+        <text x="29" y="61" text-anchor="middle" font-size="20" font-family="Fredoka One, cursive" font-weight="900" fill="white">2</text>
+        <!-- shine -->
+        <ellipse cx="22" cy="46" rx="5" ry="3" fill="white" opacity="0.3" transform="rotate(-30,22,46)"/>
+      </svg>
+    </div>
+    <div id="particles"></div>
+    <div class="pop-text" id="popText"></div>
+    <div class="rad-flash" id="radFlash"></div>
+
+    <!-- MARIE -->
+    <div class="marie" id="marie" style="left:50%;transform:translateX(-50%);">
+      <svg width="90" height="140" viewBox="0 0 90 140">
+        <!-- Full A-line skirt -->
+        <path d="M28,78 Q10,105 8,132 L82,132 Q80,105 62,78 Z" fill="#1e3a5f"/>
+        <path d="M35,78 Q22,108 20,132" fill="none" stroke="#2a5580" stroke-width="2" opacity="0.5"/>
+        <path d="M45,78 Q44,112 43,132" fill="none" stroke="#2a5580" stroke-width="1.5" opacity="0.35"/>
+        <path d="M8,132 Q45,126 82,132" fill="none" stroke="#3a6aaf" stroke-width="2"/>
+        <path d="M12,127 Q45,121 78,127 Q80,134 45,136 Q10,134 12,127 Z" fill="#2a4a7f" opacity="0.4"/>
+        <!-- Bodice -->
+        <path d="M28,78 Q28,58 45,55 Q62,58 62,78 Z" fill="#1e3a5f"/>
+        <line x1="45" y1="58" x2="45" y2="78" stroke="#2a5580" stroke-width="1.5" opacity="0.5"/>
+        <rect x="27" y="74" width="36" height="7" rx="3" fill="#134060"/>
+        <rect x="40" y="75" width="10" height="5" rx="2" fill="#5eead4" opacity="0.7"/>
+        <!-- White lace collar -->
+        <path d="M32,60 Q45,72 58,60 Q55,56 45,54 Q35,56 32,60 Z" fill="white" opacity="0.92"/>
+        <path d="M32,60 Q38,65 45,67 Q52,65 58,60" fill="none" stroke="#e0e8ff" stroke-width="1.2" opacity="0.7"/>
+        <!-- Arms -->
+        <path d="M28,62 Q14,70 10,82" fill="none" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round"/>
+        <path d="M62,62 Q74,68 76,60" fill="none" stroke="#1e3a5f" stroke-width="11" stroke-linecap="round"/>
+        <ellipse cx="10" cy="84" rx="6" ry="5" fill="#f5c5a3"/>
+        <ellipse cx="77" cy="58" rx="6" ry="5" fill="#f5c5a3"/>
+        <!-- Flask -->
+        <g transform="translate(6,85)">
+          <rect x="-4" y="-16" width="9" height="18" rx="3" fill="#0d4a3a" stroke="#34d399" stroke-width="1.5"/>
+          <rect x="-2" y="-20" width="5" height="6" rx="2" fill="#0d4a3a" stroke="#34d399" stroke-width="1"/>
+          <ellipse cx="0.5" cy="1" rx="4" ry="2.5" fill="#a7f3d0" opacity="0.7"/>
+        </g>
+        <!-- Neck -->
+        <rect x="39" y="42" width="12" height="14" rx="5" fill="#f5c5a3"/>
+        <!-- Head -->
+        <ellipse cx="45" cy="28" rx="19" ry="21" fill="#f5c5a3"/>
+        <!-- Hair updo -->
+        <ellipse cx="45" cy="14" rx="20" ry="13" fill="#7a6248"/>
+        <ellipse cx="45" cy="8"  rx="11" ry="8"  fill="#8B7355"/>
+        <ellipse cx="42" cy="6"  rx="5"  ry="3"  fill="#a08060" opacity="0.5"/>
+        <path d="M26,22 Q24,14 28,9 Q32,6 36,10" fill="#7a6248"/>
+        <path d="M64,22 Q66,14 62,9 Q58,6 54,10" fill="#7a6248"/>
+        <path d="M27,26 Q25,22 27,18" fill="none" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M63,26 Q65,22 63,18" fill="none" stroke="#8B7355" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Rosy cheeks -->
+        <ellipse cx="33" cy="33" rx="6" ry="4" fill="#f4a0b0" opacity="0.35"/>
+        <ellipse cx="57" cy="33" rx="6" ry="4" fill="#f4a0b0" opacity="0.35"/>
+        <!-- Eyes -->
+        <ellipse cx="37" cy="28" rx="5"  ry="5.5" fill="white"/>
+        <ellipse cx="53" cy="28" rx="5"  ry="5.5" fill="white"/>
+        <circle  cx="37" cy="29" r="3.2" fill="#4a6080"/>
+        <circle  cx="53" cy="29" r="3.2" fill="#4a6080"/>
+        <circle  cx="37" cy="29" r="1.8" fill="#1a1a2e"/>
+        <circle  cx="53" cy="29" r="1.8" fill="#1a1a2e"/>
+        <circle  cx="38" cy="28" r="1"   fill="white"/>
+        <circle  cx="54" cy="28" r="1"   fill="white"/>
+        <path d="M32,24 Q37,22 42,24" fill="none" stroke="#3d2000" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M48,24 Q53,22 58,24" fill="none" stroke="#3d2000" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Eyebrows -->
+        <path d="M33,22 Q37,20 41,22" fill="none" stroke="#5a3a10" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M49,22 Q53,20 57,22" fill="none" stroke="#5a3a10" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- Nose -->
+        <path d="M43,32 Q45,36 47,32" fill="none" stroke="#d09070" stroke-width="1.4" stroke-linecap="round"/>
+        <!-- Mouth -->
+        <path d="M38,40 Q45,46 52,40" fill="#e8827a" opacity="0.4"/>
+        <path d="M38,40 Q45,46 52,40" fill="none" stroke="#c06050" stroke-width="2" stroke-linecap="round"/>
+        <path d="M40,39 Q43,37 45,39 Q47,37 50,39" fill="none" stroke="#c06050" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="ground g-snow" id="ground"></div>
+  </div>
+
+  <div class="text-panel" id="textPanel"></div>
+
+  <div class="audio-bar">
+    <button class="audio-play-btn" id="audioPlayBtn" onclick="toggleNarration()">▶</button>
+    <button class="audio-stop-btn" onclick="stopNarration()">■</button>
+    <div class="audio-progress-wrap">
+      <div class="audio-progress-bar" id="audioProgressBar"></div>
+    </div>
+    <span class="audio-status" id="audioStatus">Ready</span>
+    <label class="autoread-toggle">
+      <input type="checkbox" id="autoReadToggle" onchange="autoRead=this.checked">
+      <div class="toggle-pill"></div>
+      Auto‑read
+    </label>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn prev" id="prevBtn" onclick="changeSlide(-1)" disabled>← Back</button>
+    <div class="progress-dots" id="dots"></div>
+    <button class="ctrl-btn next" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  </div>
+
+</div>
+
+<script>
+const slides = [
+  {
+    bg:'bg-warsaw', ground:'g-snow', snow:true,  eiffel:false,
+    glow:false, particles:false, medals:false, notebook:false,
+    mariePos:'center', popMsg:'', popColor:'#a7f3d0',
+    heading:"Meet Little Maria! ❄️👧",
+    text:"A long time ago, in a cold and snowy city called <strong>Warsaw</strong> in Poland, a little girl named <strong>Maria Sklodowska</strong> was born. Her friends called her <em>Manya</em>. She absolutely LOVED learning — numbers, books, science — everything! She was the cleverest child in her class. 📚❄️",
+    extra:"Fun Fact: Marie Curie was born in 1867 — over 150 years ago! Warsaw winters were very cold and snowy."
+  },
+  {
+    bg:'bg-warsaw', ground:'g-snow', snow:true,  eiffel:false,
+    glow:false, particles:false, medals:false, notebook:false,
+    mariePos:'left', popMsg:'', popColor:'#a7f3d0',
+    heading:"Girls Weren't Allowed! 😤💪",
+    text:"When Maria grew up, she wanted to go to university to study science. But in Poland, <strong>girls were not allowed</strong> at university — that was terribly unfair! So Maria made a brave deal with her sister — they would take turns saving money to send each other to study. Nothing would stop her! 💪",
+    extra:"Fun Fact: Maria and her sister Bronya helped each other all their lives. Sisters are the best team!"
+  },
+  {
+    bg:'bg-paris', ground:'g-paris', snow:false, eiffel:true,
+    glow:false, particles:false, medals:false, notebook:false,
+    mariePos:'center', popMsg:'🎓 First in Class! 🎓', popColor:'#FBBF24',
+    heading:"Off to Paris! 🗼✨",
+    text:"Maria saved every penny and travelled to the city of <strong>Paris, France</strong>! There she could finally study at the famous <em>Sorbonne University</em>. She changed her name to <strong>Marie</strong>. She was so poor her room had no heating — she piled on clothes and kept studying! She finished <strong>first in her whole class</strong>! 🌟",
+    extra:"Fun Fact: Marie was the FIRST woman ever to earn a physics degree from the Sorbonne. History made!"
+  },
+  {
+    bg:'bg-paris', ground:'g-paris', snow:false, eiffel:true,
+    glow:false, particles:false, medals:false, notebook:false,
+    mariePos:'center', popMsg:'', popColor:'#a7f3d0',
+    heading:"Marie Meets Pierre! 💑🔬",
+    text:"In Paris, Marie met a kind and brilliant scientist named <strong>Pierre Curie</strong>. He said Marie was the most remarkable scientist he had ever met! They fell in love, got married, and built a little laboratory together. Every day they worked side by side, asking BIG questions about the world. 🥼⚗️",
+    extra:"Fun Fact: Marie and Pierre went on a bicycle honeymoon — two scientists on a grand adventure! 🚲"
+  },
+  {
+    bg:'bg-lab', ground:'g-lab', snow:false, eiffel:false,
+    glow:false, particles:false, medals:false, notebook:true,
+    mariePos:'center', popMsg:'⚗️ New Discovery! ⚗️', popColor:'#a7f3d0',
+    heading:"A Mysterious Energy! ✨⚗️",
+    text:"One day, Marie noticed something astonishing — a rock called <strong>pitchblende</strong> gave off invisible energy all by itself, with no fire or electricity! Nobody had ever seen anything like it. Marie called this brand new discovery <em>radioactivity</em> — a word <strong>she invented!</strong> The whole world of science was amazed. ⚡",
+    extra:"Fun Fact: 'Radioactivity' is Marie's own word — scientists everywhere still use it every single day!"
+  },
+  {
+    bg:'bg-glow', ground:'g-lab', snow:false, eiffel:false,
+    glow:true, particles:true, medals:false, notebook:true,
+    mariePos:'center', popMsg:'💚 Radium GLOWS! 💚', popColor:'#a7f3d0',
+    heading:"Two Brand New Elements! 💚🌟",
+    text:"Marie and Pierre worked for <strong>four whole years</strong>, stirring enormous boiling pots of rock! They discovered <strong>two completely new elements</strong> — things nobody knew existed! She named one <em>Polonium</em> after her home country Poland 🇵🇱. The other she called <em>Radium</em> — and Radium actually <strong>glows green in the dark!</strong> 💚",
+    extra:"Fun Fact: Marie's notebooks are STILL radioactive today — you need special gloves just to touch them!"
+  },
+  {
+    bg:'bg-triumph', ground:'g-lab', snow:false, eiffel:false,
+    glow:false, particles:false, medals:true, notebook:false,
+    mariePos:'left', popMsg:'🏅 FIRST NOBEL PRIZE! 🏅', popColor:'#FBBF24',
+    heading:"Nobel Prize Number One! 🥇",
+    text:"In <strong>1903</strong>, Marie and her husband <strong>Pierre</strong> — along with another scientist named <em>Henri Becquerel</em> — won the most famous prize in all of science — the <strong>Nobel Prize in Physics!</strong> They won it for discovering radioactivity — the invisible energy coming from rocks. Marie was the <em>very first woman</em> in history to ever win it! People all over the world were astonished. Marie smiled quietly — and went straight back to her lab. 🔬",
+    extra:"Fun Fact: The Nobel committee at first forgot to include Marie's name — Pierre insisted they add her. She deserved it every bit as much!"
+  },
+  {
+    bg:'bg-triumph', ground:'g-lab', snow:false, eiffel:false,
+    glow:true, particles:true, medals:true, notebook:false,
+    mariePos:'center', popMsg:'🌟 TWO Nobel Prizes! 🌟', popColor:'#FBBF24',
+    heading:"Nobel Prize Number TWO — and a Legend! 🥇🥈🌍",
+    text:"Eight years later, in <strong>1911</strong>, Marie won a <em>second</em> Nobel Prize — this time in <strong>Chemistry!</strong> She won it for actually <em>isolating</em> pure Radium — separating it from all the rock and holding it in her hands for the very first time! Nobody had EVER won two Nobel Prizes in two different sciences. <strong>Nobody has since.</strong> Her discoveries help doctors treat cancer to this day. She gave everything to the world <strong>for free</strong>. A true <strong>superstar of science!</strong> ⭐",
+    extra:"Fun Fact: There is a chemical element named after her — Curium, number 96 on the periodic table! ⚗️"
+  }
+];
+
+const narrations = [
+  "Meet little Maria! A very long time ago, in a cold and snowy city called Warsaw in Poland, a little girl named Maria Sklodowska was born. Her friends called her Manya. She absolutely loved learning — numbers, books, science — everything! She was the cleverest child in her whole class.",
+  "But girls weren't allowed! When Maria grew up, she desperately wanted to go to university to study science. But in Poland, girls were simply not allowed. That was terribly unfair! So Maria made a brave deal with her sister — they would take turns saving money to send each other to study. Nothing was going to stop her!",
+  "Off to Paris! Maria saved every single penny she could and travelled all the way to the beautiful city of Paris in France! There she could finally study at the famous Sorbonne University. She changed her name to Marie. She was so poor her tiny room had no heating at all — but she just piled on more clothes and kept studying! And she finished first in her whole class — better than every single student!",
+  "Marie meets Pierre! In Paris, Marie met a kind and brilliant scientist named Pierre Curie. He said Marie was the most remarkable scientist he had ever met in his whole life! They fell in love, got married, and built a little laboratory together. Every single day they worked side by side, asking the biggest questions they could imagine.",
+  "A mysterious energy! One day, Marie noticed something completely astonishing. A rock called pitchblende was giving off invisible energy all by itself — with no fire, no electricity, nothing at all! Nobody had ever seen anything like this. Marie called this incredible discovery radioactivity — a word that SHE invented herself. The whole world of science stopped and listened.",
+  "Two brand new elements! Marie and Pierre worked incredibly hard for four whole years, stirring enormous boiling pots of rock in their little laboratory! All that hard work paid off — they discovered two completely new elements that nobody in the world even knew existed! She named one Polonium, after her beloved home country of Poland. And the other she called Radium — and Radium actually GLOWS green in the dark!",
+  "Nobel Prize number one! In nineteen hundred and three, Marie and her husband Pierre, together with another scientist named Henri Becquerel, won the most famous prize in all of science — the Nobel Prize in Physics! They won it for discovering radioactivity — the invisible energy coming out of rocks. Marie was the very first woman in all of history to ever win it. People all over the world were astonished. Marie smiled quietly — and went straight back to her laboratory to keep on working.",
+  "Nobel Prize number two — and a legend! Eight years later, Marie won a SECOND Nobel Prize — this time in Chemistry! She won it for isolating pure Radium — actually separating it from all the rock so she could hold it in her hands for the very first time. Nobody had ever won two Nobel Prizes in two completely different sciences before. And nobody has done it since. Marie is the only person in all of history to achieve this! Her discoveries help doctors treat cancer even today, and she gave everything to the world for free. She is the greatest female scientist in all of history — a true superstar, and an inspiration to every curious girl on the planet!"
+];
+
+let current = 0;
+let particleInterval = null;
+let autoRead = false;
+let isSpeaking = false;
+let utterance = null;
+let progressTimer = null;
+
+function init() {
+  buildStarField();
+  buildDots();
+  applySlide();
+  initAudio();
+}
+
+function buildStarField() {
+  const sf = document.getElementById('starField');
+  for (let i = 0; i < 50; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-dot';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*65}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;`;
+    sf.appendChild(s);
+  }
+}
+
+function buildDots() {
+  const d = document.getElementById('dots');
+  d.innerHTML = slides.map((_,i) => `<div class="dot" id="dot-${i}" onclick="jumpTo(${i})"></div>`).join('');
+}
+
+function jumpTo(i) { stopNarration(); current = i; applySlide(); }
+
+function changeSlide(dir) {
+  stopNarration();
+  current = Math.max(0, Math.min(slides.length - 1, current + dir));
+  applySlide();
+  if (autoRead) setTimeout(playNarration, 400);
+}
+
+function applySlide() {
+  const s = slides[current];
+  const max = slides.length - 1;
+
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').textContent = current === max ? '🎉 The End!' : 'Next →';
+
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.classList.toggle('active', i === current);
+    d.classList.toggle('done', i < current);
+  });
+
+  document.getElementById('textPanel').innerHTML = `
+    <div class="slide-text active">
+      <h2>${s.heading}</h2>
+      <p>${s.text}</p>
+      ${s.extra ? `<div class="fun-fact">${s.extra}</div>` : ''}
+    </div>`;
+
+  document.getElementById('bg').className     = 'bg ' + s.bg;
+  document.getElementById('ground').className = 'ground ' + s.ground;
+
+  setupSnow(s.snow);
+  document.getElementById('eiffel').classList.toggle('show', !!s.eiffel);
+  document.getElementById('glowOrb1').style.display = s.glow ? 'block' : 'none';
+  document.getElementById('glowOrb2').style.display = s.glow ? 'block' : 'none';
+  document.getElementById('notebook').classList.toggle('show', !!s.notebook);
+
+  clearInterval(particleInterval);
+  document.getElementById('particles').innerHTML = '';
+  if (s.particles) particleInterval = setInterval(spawnParticles, 600);
+
+  const m1 = document.getElementById('medal1');
+  const m2 = document.getElementById('medal2');
+  m1.classList.remove('pop'); m2.classList.remove('pop');
+  if (s.medals) {
+    void m1.offsetWidth; m1.classList.add('pop');
+    setTimeout(() => { void m2.offsetWidth; m2.classList.add('pop'); }, 450);
+  }
+
+  const pt = document.getElementById('popText');
+  pt.classList.remove('show'); void pt.offsetWidth;
+  if (s.popMsg) { pt.textContent = s.popMsg; pt.style.color = s.popColor; pt.classList.add('show'); }
+
+  const rf = document.getElementById('radFlash');
+  rf.classList.remove('pop'); void rf.offsetWidth;
+  if (s.glow) rf.classList.add('pop');
+
+  const marie = document.getElementById('marie');
+  marie.style.left = s.mariePos === 'left' ? '22%' : s.mariePos === 'right' ? '78%' : '50%';
+  marie.style.transform = 'translateX(-50%)';
+}
+
+function setupSnow(active) {
+  const sf = document.getElementById('snowField');
+  sf.innerHTML = '';
+  if (!active) return;
+  const flakes = ['❄','❅','❆','·','*'];
+  for (let i = 0; i < 28; i++) {
+    const el = document.createElement('div');
+    el.className = 'snowflake';
+    el.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+    el.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*40}%;font-size:${0.5+Math.random()*0.8}rem;animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*3}s;`;
+    sf.appendChild(el);
+  }
+}
+
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  const marie = document.getElementById('marie');
+  const mRect = marie.getBoundingClientRect();
+  const cRect = document.getElementById('sceneCanvas').getBoundingClientRect();
+  const cx = mRect.left - cRect.left + mRect.width / 2;
+  const cy = mRect.top  - cRect.top  + mRect.height / 2;
+  for (let i = 0; i < 5; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 40 + Math.random() * 60;
+    p.style.cssText = `width:${3+Math.random()*5}px;height:${3+Math.random()*5}px;background:${Math.random()>0.5?'#a7f3d0':'#6ee7b7'};left:${cx}px;top:${cy}px;--px:${Math.cos(angle)*dist}px;--py:${Math.sin(angle)*dist}px;animation-duration:${0.8+Math.random()}s;animation-delay:${Math.random()*0.3}s;filter:blur(1px);`;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 2000);
+  }
+}
+
+function initAudio() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+}
+function getBestVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = ['Samantha','Karen','Moira','Tessa','Google US English','Microsoft Zira'];
+  for (const name of preferred) { const v = voices.find(v => v.name.includes(name)); if (v) return v; }
+  return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+}
+function toggleNarration() { if (!('speechSynthesis' in window)) return; isSpeaking ? pauseNarration() : playNarration(); }
+function playNarration() {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel(); clearInterval(progressTimer);
+  const text = narrations[current] || ''; if (!text) return;
+  utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.88; utterance.pitch = 1.05; utterance.volume = 1;
+  const v = getBestVoice(); if (v) utterance.voice = v;
+  const dur = (text.split(' ').length / (130 * 0.88)) * 60000;
+  const start = Date.now();
+  utterance.onstart = () => {
+    isSpeaking = true; setAudioUI('speaking');
+    progressTimer = setInterval(() => {
+      document.getElementById('audioProgressBar').style.width = Math.min(100, ((Date.now()-start)/dur)*100) + '%';
+    }, 120);
+  };
+  utterance.onend = () => {
+    isSpeaking = false; clearInterval(progressTimer); setAudioUI('done');
+    if (autoRead && current < slides.length - 1) setTimeout(() => changeSlide(1), 900);
+  };
+  utterance.onerror = () => { isSpeaking = false; clearInterval(progressTimer); setAudioUI('ready'); };
+  window.speechSynthesis.speak(utterance);
+}
+function pauseNarration() { window.speechSynthesis.pause(); isSpeaking = false; clearInterval(progressTimer); setAudioUI('paused'); }
+function stopNarration() {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel(); isSpeaking = false; clearInterval(progressTimer); setAudioUI('ready');
+}
+function setAudioUI(state) {
+  const btn = document.getElementById('audioPlayBtn');
+  const status = document.getElementById('audioStatus');
+  const bar = document.getElementById('audioProgressBar');
+  status.classList.remove('speaking');
+  if (state==='speaking') { btn.textContent='⏸'; status.textContent='Reading...'; status.classList.add('speaking'); }
+  else if (state==='paused') { btn.textContent='▶'; status.textContent='Paused'; }
+  else if (state==='done') { btn.textContent='▶'; status.textContent='Done! ✓'; bar.style.width='100%'; setTimeout(()=>{ bar.style.width='0%'; status.textContent='Ready'; },1800); }
+  else { btn.textContent='▶'; status.textContent='Ready'; bar.style.width='0%'; }
+}
+
+init();
+</script>
+</body>
+</html>
